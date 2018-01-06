@@ -16,15 +16,15 @@ for (var i = 0; i < offers.length; i++) {
 }
 
 
-
-
 // Показываем карту
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
 // Находим шаблон пина
 var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin');
+// Находим шаблон объявления
 var mapCardTemplate = document.querySelector('template').content.querySelector('.map__card');
+// Нода для вывода меток
 var mapPins = document.querySelector('.map__pins');
 
 // Вывод меток
@@ -40,6 +40,8 @@ for (var i = 0; i < offers.length; i++) {
 	fragment.appendChild(renderMapCard(i));
 }
 map.appendChild(fragment);
+
+
 
 
 // Создает копию шаблона метки, заполняет его данными из массива и возвращает
