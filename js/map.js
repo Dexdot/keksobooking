@@ -8,18 +8,107 @@ var offerTitles = ['Большая уютная квартира', 'Малень
 		checkinTimes = ['12:00', '13:00', '14:00'],
 		features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
 
+		map = document.querySelector('.map'),
+		form = document.querySelector('.notice__form'),
+		fieldsets = form.querySelectorAll('fieldset'),
+		mapPinMain = map.querySelector('.map__pin--main'),
+
+		selectCheckIn = form.querySelector('#timein'),
+		selectCheckOut = form.querySelector('#timeout'),
+
+		selectType = form.querySelector('#type'),
+		inputPrice = form.querySelector('#price'),
+
+		selectRooms = form.querySelector('#room_number'),
+		selectGuests = form.querySelector('#capacity'),
+
 		OFFERS_COUNT = 8,
-		offers = new Array(OFFERS_COUNT);
+		ESC_KEYCODE = 27,
+		ENTER_KEYCODE = 13,
+
+		offers = new Array(OFFERS_COUNT),
+		mapPins = [],
+		mapCards = [],
+		cardsClose = [],
+
+		mapPinMainMouseupHandler = function() {
+			showMap();
+			renderSimilarList();
+			renderMapPins();
+			showForm();
+			enableForm();
+			mapPinMain.removeEventListener('mouseup', mapPinMainMouseupHandler);
+		},
+		mapPinMainKeydownHandler = function(e) {
+			if (e.keyCode === ENTER_KEYCODE) {
+				mapPinMainMouseupHandler();
+				mapPinMain.removeEventListener('keydown', mapPinMainKeydownHandler);
+			}
+		},
+		cardEscHandler = function(e) {
+			if (e.keyCode === ESC_KEYCODE) {
+				cardCloseClickHandler();
+			}
+		},
+		mapPinClickHandler = function(e) {
+			deactivateMapPins();
+			e.currentTarget.classList.add('map__pin--active');
+			hideCards();
+			mapCards[e.currentTarget.index].style.display = 'block';
+			document.addEventListener('keydown', cardEscHandler);
+		},
+		cardCloseClickHandler = function() {
+			hideCards();
+			deactivateMapPins();
+			document.removeEventListener('keydow', cardEscHandler);
+		},
+		selectCheckInHandler = function() {
+			selectCheckOut.value = selectCheckIn.value;
+		},
+		selectCheckOutHandler = function() {
+			selectCheckIn.value = selectCheckOut.value;
+		},
+		selectTypeHandler = function() {
+			switch (selectType.value) {
+				case 'flat':
+					setInputValue(inputPrice, 1000);
+					break;
+				case 'house':
+					setInputValue(inputPrice, 5000);						
+					break;
+				case 'bungalo':
+					setInputValue(inputPrice, 0);						
+					break;
+				case 'palace':
+					setInputValue(inputPrice, 10000);						
+					break;
+				default:
+					setInputValue(inputPrice, 1000);				
+			}
+		},
+		selectRoomsHandler = function() {
+			switch (selectRooms.value) {
+				case '1':
+					selectGuests.querySelector('option[value="1"]').selected = true;					
+					break;
+				case '2':
+					selectGuests.querySelector('option[value="2"]').selected = true;
+					break;
+				case '3':
+					selectGuests.querySelector('option[value="3"]').selected = true;
+					break;
+				case '100':
+					selectGuests.querySelector('option[value="0"]').selected = true;
+					break;
+				default:
+					selectGuests.querySelector('option[value="1"]').selected = true;
+			}
+		}
 
 // Заполняем массив офферов
 for (var i = 0; i < offers.length; i++) {
 	offers[i] = createOffer();
 }
-
-
-// Показываем карту
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 // Находим шаблон пина
 var mapPinTemplate = document.querySelector('template').content.querySelector('.map__pin'),
@@ -28,24 +117,116 @@ var mapPinTemplate = document.querySelector('template').content.querySelector('.
 		mapCardTemplate = document.querySelector('template').content.querySelector('.map__card'),
 
 		// Нода для вывода меток
-		mapPins = document.querySelector('.map__pins');
+		mapPinsList = document.querySelector('.map__pins');
 
-// Вывод меток
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < offers.length; i++) {
-	fragment.appendChild(renderMapPin(i));
+// При клике/нажатии enter на главный пин, показываем карту, показываем и активируем форму
+mapPinMain.addEventListener('mouseup', mapPinMainMouseupHandler);
+mapPinMain.addEventListener('keydown', mapPinMainKeydownHandler);
+
+// При изменении одного из полей, значение второго автоматически выставляется таким же
+selectCheckIn.addEventListener('change', selectCheckInHandler);
+selectCheckOut.addEventListener('change', selectCheckOutHandler);
+
+// Установка минимальной цены в зависимости от типа жилья
+selectType.addEventListener('change', selectTypeHandler);
+
+// Установка кол-ва гостей в зависимости от кол-ва комнат
+selectRooms.addEventListener('change', selectRoomsHandler);
+
+
+/**
+ * @description Задает для инпута минимальное значение и placeholder
+ * @param {elem} input Элемент формы
+ * @param {number} val Значение, которое нужно задать
+ */
+function setInputValue(input, val) {
+	input.value = '' + val;
+	input.min = '' + val;
+	input.placeholder = '' + val;
 }
-mapPins.appendChild(fragment);
 
-// Вывод объявлений
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < offers.length; i++) {
-	fragment.appendChild(renderMapCard(i));
+/**
+ * @description Вешает на элементы массива обработчик
+ * @param {array} arr Массив, на элементы которого вешается обработчик
+ * @param {function} handler Обработчик
+ */
+function addListeners(arr, handler) {
+	for (var i = 0; i < arr.length; i++) {
+		arr[i].addEventListener('click', handler);
+	}
 }
-map.appendChild(fragment);
+
+/**
+ * @description Убирает у всех меток класс 'map__pin--actve'
+ */
+function deactivateMapPins() {
+	for (var i = 0; i < mapPins.length; i++) {
+		mapPins[i].classList.remove('map__pin--active');
+	}
+}
+
+/**
+ * @description Скрывает все объявления
+ */
+function hideCards() {
+	for (var i = 0; i < mapCards.length; i++) {
+		mapCards[i].style.display = 'none';
+	}
+}
+
+/**
+ * @description Показывает карту
+ */
+function showMap() {
+	map.classList.remove('map--faded');
+}
+
+/**
+ * @description Добавляет в разметку метки, добавляет их в массив, вешает на них обработчики
+ */
+function renderMapPins() {
+	var fragment = document.createDocumentFragment();
+	for (var i = 0; i < offers.length; i++) {
+		fragment.appendChild(renderMapPin(i));
+	}
+	mapPinsList.appendChild(fragment);
+	mapPins = document.querySelectorAll('.map__pin');
+	mapPins = Array.prototype.slice.call(mapPins);	
+	mapPins.shift();
+	addListeners(mapPins, mapPinClickHandler);
+}
+
+/**
+ * @description Добавляет в разметку похожие объявления/офферы
+ */
+function renderSimilarList() {
+	var fragment = document.createDocumentFragment();
+	for (var i = 0; i < offers.length; i++) {
+		fragment.appendChild(renderMapCard(i));
+	}
+	map.appendChild(fragment);
+	mapCards = document.querySelectorAll('.map__card');
+	cardsClose = map.querySelectorAll('.popup__close');
+	addListeners(cardsClose, cardCloseClickHandler);
+}
 
 
+/**
+ * @description Показывает форму
+ */
+function showForm() {
+	form.classList.remove('notice__form--disabled');
+}
 
+
+/**
+ * @description Активирует форму
+ */
+function enableForm() {
+	for (var i = 0; i < fieldsets.length; i++) {
+		fieldsets[i].disabled = false;				
+	}
+}
 
 /**
  * @description Создает копию шаблона метки, заполняет его данными из массива и возвращает
@@ -57,6 +238,7 @@ function renderMapPin(i) {
 	mapPin.style = 'left: ' + (offers[i].location.x + (mapPin.offsetWidth / 2)) + 'px; top: ' + 
 	(offers[i].location.y + (mapPin.offsetHeight / 2)) + 'px';
 	mapPin.querySelector('img').src = offers[i].author.avatar;
+	mapPin.index = i;
 	return mapPin;
 }
 
@@ -158,7 +340,16 @@ function createOffer() {
 	var offer = new Offer();
 	removeCreatedTitle(offer);
 	setOfferType(offer);
+	syncCheckInOut(offer);
 	return offer;
+}
+
+/**
+ * @description Устанавливает checkin === checkout
+ * @param {object} offer Объект объявления
+ */
+function syncCheckInOut(offer) {
+	offer.offer.checkout = offer.offer.checkin;
 }
 
 /**

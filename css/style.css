@@ -336,6 +336,8 @@ textarea:focus {
 }
 
 .map__card {
+  display: none;
+
   width: 230px;
 
   position: absolute;
