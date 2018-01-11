@@ -28,10 +28,18 @@
           x: moveEvent.clientX,
           y: moveEvent.clientY
         }
-  
+        
+        // Ограничиваем вертикальные координаты (100 < y < 500)
+        if ((mapPinMain.offsetTop - shift.y) > 500) {
+          mapPinMain.style.top = 499 + 'px';  
+        } else if ((mapPinMain.offsetTop - shift.y) < 100) {
+          mapPinMain.style.top = 100 + 'px';
+        } else {
+          mapPinMain.style.top = mapPinMain.offsetTop - shift.y + 'px';
+        }
+
         // Перемещаем пин
         mapPinMain.style.left = mapPinMain.offsetLeft - shift.x + 'px';
-        mapPinMain.style.top = mapPinMain.offsetTop - shift.y + 'px';
 
         // Записываем координаты метки в инпут "Адрес"
         setAddressValue();
