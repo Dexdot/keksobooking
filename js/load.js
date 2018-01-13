@@ -7,7 +7,7 @@
   window.load = function(URL, callback) {
 
     var xhrLoadListener = function() {
-      callback(xhr);
+      callback(xhr.response);
       xhr.removeEventListener('load', xhrLoadListener);
     }
     xhr.addEventListener('load', xhrLoadListener);
