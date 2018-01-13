@@ -6,6 +6,10 @@ var ESC_KEYCODE = 27,
 (function() {
   window.util = {
 
+    STATUS_OK: 200,
+    STATE_LOADING: 3,
+    STATE_DONE: 4,
+    
     /**
      * @description Вешает на элементы массива обработчик
      * @param {array} arr Массив, на элементы которого вешается обработчик

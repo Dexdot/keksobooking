@@ -12,7 +12,8 @@
       features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
 
       OFFERS_COUNT = 8,
-      offers = new Array(OFFERS_COUNT);
+      offers = new Array(OFFERS_COUNT),
+      URL = 'https://js.dump.academy/keksobooking/data';
 
   // Заполняем массив офферов
   for (var i = 0; i < offers.length; i++) {
@@ -22,7 +23,12 @@
   
   window.data = {
     offers: offers
-  }
+  };
+
+  window.load(URL, function () {
+    console.log(data);
+  });
+  
 
 
   /**
