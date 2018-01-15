@@ -27,6 +27,24 @@
     },
 
     /**
+     * @description Скрывает все пины
+     */
+    hidePins: function() {
+      for (var i = 0; i < mapPins.length; i++) {
+        mapPins[i].style.display = 'none';
+      }
+    },
+
+    /**
+     * @description Показывает все пины
+     */
+    showPins: function() {
+      for (var i = 0; i < mapPins.length; i++) {
+        mapPins[i].style.display = 'block';
+      }
+    },
+
+    /**
      * @description Добавляет в разметку метки, добавляет их в массив, вешает на них обработчики
      */
     renderMapPins: function () {
@@ -38,6 +56,7 @@
       mapPins = document.querySelectorAll('.map__pin');
       mapPins = Array.prototype.slice.call(mapPins);
       mapPins.shift();
+      window.pin.pins = mapPins;
       window.util.addListeners(mapPins, mapPinClickHandler);
     }
 

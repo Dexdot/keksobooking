@@ -12,7 +12,7 @@ var ESC_KEYCODE = 27,
     
     /**
      * @description Вешает на элементы массива обработчик
-     * @param {array} arr Массив, на элементы которого вешается обработчик
+     * @param {array} arr Массив, на элементы которого вешается обработчик клика
      * @param {function} handler Обработчик
      */
     addListeners: function (arr, handler) {

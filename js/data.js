@@ -6,6 +6,9 @@
       URL = 'https://js.dump.academy/keksobooking/data',
       dataLoadHandler = function(response) {
         offers = response;
+        offers.forEach(function(offer, i) {
+          offer.index = i;
+        })
         window.data = {
           offers: offers
         };
