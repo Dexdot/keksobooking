@@ -9,6 +9,7 @@ var ESC_KEYCODE = 27,
     STATUS_OK: 200,
     STATE_LOADING: 3,
     STATE_DONE: 4,
+    FILE_TYPES: ['gif', 'png', 'jpg', 'jpeg'],
     
     /**
      * @description Вешает на элементы массива обработчик

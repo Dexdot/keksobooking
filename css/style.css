@@ -608,7 +608,9 @@ textarea:focus {
 .form__photo-container {
   width: 140px;
 }
-
+.form__photo-container img {
+  width: 140px;
+}
 .form__element--submit {
   width: 100%;
   padding: 40px 0;

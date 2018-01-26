@@ -3,6 +3,7 @@
 (function() {
   var form = document.querySelector('.notice__form'),
       fieldsets = form.querySelectorAll('fieldset'),
+      resetButton = form.querySelector('.form__reset'),
       selectCheckIn = form.querySelector('#timein'),
       selectCheckOut = form.querySelector('#timeout'),
 
@@ -16,6 +17,17 @@
       flatMinPrice = 1000,
       houseMinPrice = 5000,
       palaceMinPrice = 10000,
+
+      resetButtonHandler = function() {
+        var imagesContainer = document.querySelector('.form__photo-container'),
+            images = imagesContainer.querySelectorAll('img');
+
+        if (images) {
+          images.forEach(function(img) {
+            imagesContainer.removeChild(img);
+          });          
+        }
+      },
 
       selectCheckInHandler = function () {
         selectCheckOut.value = selectCheckIn.value;
@@ -69,6 +81,9 @@
 
   // Установка кол-ва гостей в зависимости от кол-ва комнат
   selectRooms.addEventListener('change', selectRoomsHandler);
+  
+  // Удаляем загруженные фотографии объявления при нажатии "очистить"
+  resetButton.addEventListener('click', resetButtonHandler);
   
 
   /**
