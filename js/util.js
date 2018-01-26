@@ -15,7 +15,7 @@ var ESC_KEYCODE = 27,
      * @param {array} arr Массив, на элементы которого вешается обработчик клика
      * @param {function} handler Обработчик
      */
-    addListeners: function (arr, handler) {
+    addClickListeners: function (arr, handler) {
       for (var i = 0; i < arr.length; i++) {
         arr[i].addEventListener('click', handler);
       }

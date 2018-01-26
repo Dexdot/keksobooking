@@ -57,7 +57,7 @@
       mapPins = Array.prototype.slice.call(mapPins);
       mapPins.shift();
       window.pin.pins = mapPins;
-      window.util.addListeners(mapPins, mapPinClickHandler);
+      window.util.addClickListeners(mapPins, mapPinClickHandler);
     }
 
   }

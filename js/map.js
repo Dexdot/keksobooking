@@ -22,6 +22,14 @@
 		}
 
 
+
+
+
+
+
+		
+
+
 	// При клике/нажатии enter на главный пин, показываем карту, показываем и активируем форму
 	mapPinMain.addEventListener('click', mapPinMainClickHandler);
 	mapPinMain.addEventListener('keydown', mapPinMainKeydownHandler);

@@ -38,7 +38,7 @@
           mapPinMain.style.top = mapPinMain.offsetTop - shift.y + 'px';
         }
 
-        // Перемещаем пин
+        // Перемещаем пин по X
         mapPinMain.style.left = mapPinMain.offsetLeft - shift.x + 'px';
 
         // Записываем координаты метки в инпут "Адрес"

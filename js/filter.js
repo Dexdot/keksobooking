@@ -13,6 +13,7 @@
       filteredPins = [],
       filteredFeatures = [],
 
+
       filterPins = function() {
         filteredPins = window.data.offers
         .filter(function(offer) {
@@ -21,76 +22,32 @@
           }
         })
         .filter(function(offer) {
-          switch (selectPrice.value) {
-            case 'any':
-              return true;
-              break;
-            case 'low':
-              if (offer.offer.price <= 10000) {
-                return true;
-              }
-              break;
-            case 'middle':
-              if (offer.offer.price >= 10000 && offer.offer.price <= 50000) {
-                return true;
-              }
-              break;
-            case 'high':
-              if (offer.offer.price >= 50000) {
-                return true;
-              }
-              break;
-            default:
-              break;
-          }
+
+          var offerPriceMap = {
+            'any': true,
+            'low': offer.offer.price <= 10000,
+            'middle': offer.offer.price >= 10000 && offer.offer.price <= 50000,
+            'high': offer.offer.price >= 50000
+          };
+          return offerPriceMap[selectPrice.value];
         })
         .filter(function(offer) {
-          switch (selectRooms.value) {
-            case 'any':
-              return true;
-              break;
-            case '1':
-              if (offer.offer.rooms === 1) {
-                return true;
-              }
-              break;
-            case '2':
-              if (offer.offer.rooms === 2) {
-                return true;
-              }
-              break;
-            case '3':
-              if (offer.offer.rooms === 3) {
-                return true;
-              }
-              break;
-            default:
-              break;
-          }
+          var offerRoomsMap = {
+            'any': true,
+            '1': offer.offer.rooms === 1,
+            '2': offer.offer.rooms === 2,
+            '3': offer.offer.rooms === 3
+          };
+          return offerRoomsMap[selectRooms.value];
         })
         .filter(function(offer) {
-          switch (selectGuests.value) {
-            case 'any':
-              return true;
-              break;
-            case '1':
-              if (offer.offer.guests === 1) {
-                return true;
-              }
-              break;
-            case '2':
-              if (offer.offer.guests === 2) {
-                return true;
-              }
-              break;
-            case '3':
-              if (offer.offer.guests === 3) {
-                return true;
-              }
-              break;
-            default:
-              break;
-          }
+          var offerGuestMap = {
+            'any': true,
+            '1': offer.offer.guests === 1,
+            '2': offer.offer.guests === 2,
+            '3': offer.offer.guests === 3
+          };
+          return offerGuestMap[selectGuests.value];
         })
         .filter(function(offer) {
 
@@ -105,9 +62,7 @@
           });
 
           // Если все выбранные фичи есть в оффере, то выбираем этот оффер
-          if (coinciding === filteredFeatures.length) {
-            return true;
-          }
+          return coinciding === filteredFeatures.length;
         });
 
         // Прячем все пины

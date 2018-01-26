@@ -28,9 +28,11 @@
       }
       map.appendChild(fragment);
       mapCards = document.querySelectorAll('.map__card');
+
+      // this === window
       this.mapCards = mapCards;
       cardsClose = map.querySelectorAll('.popup__close');
-      window.util.addListeners(cardsClose, cardCloseClickHandler);
+      window.util.addClickListeners(cardsClose, cardCloseClickHandler);
     },
 
     /**
@@ -60,27 +62,18 @@
   function renderMapCard(i) {
     var mapCard = mapCardTemplate.cloneNode(true),
       cardOfferType = mapCard.querySelector('h4'),
-      cardOfferFeatures = mapCard.querySelector('.popup__features');
+      cardOfferFeatures = mapCard.querySelector('.popup__features'),
+      offerTypeMap = {
+        'flat': 'Квартира',
+        'house': 'Дом',
+        'bungalo': 'Бунгало',
+        'palace': 'Дворец'
+      };
 
     mapCard.querySelector('h3').textContent = window.data.offers[i].offer.title;
     mapCard.querySelector('p small').textContent = window.data.offers[i].offer.address;
     mapCard.querySelector('.popup__price').textContent = window.data.offers[i].offer.price + '₽ / ночь';
-    switch (window.data.offers[i].offer.type) {
-      case 'flat':
-        cardOfferType.textContent = 'Квартира';
-        break;
-      case 'house':
-        cardOfferType.textContent = 'Дом';
-        break;
-      case 'bungalo':
-        cardOfferType.textContent = 'Бунгало';
-        break;
-      case 'palace':
-        cardOfferType.textContent = 'Дворец';
-        break;
-      default:
-        cardOfferType.textContent = 'Дом';
-    }
+    cardOfferType.textContent = offerTypeMap[window.data.offers[i].offer.type] || 'Дом';
     cardOfferType.nextElementSibling.textContent = 'Комнат: ' + window.data.offers[i].offer.rooms + ' для ' +
       window.data.offers[i].offer.guests + ' гостей.';
     mapCard.querySelector('.popup__features').previousElementSibling.textContent = 'Заезд после ' + window.data.offers[i].offer.checkin + ', выезд до ' + window.data.offers[i].offer.checkout;
